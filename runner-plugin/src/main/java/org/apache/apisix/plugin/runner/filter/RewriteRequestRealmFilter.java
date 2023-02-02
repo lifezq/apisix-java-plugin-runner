@@ -72,13 +72,13 @@ public class RewriteRequestRealmFilter implements PluginFilter {
         }
 
         String realm = userService.getByUsername(username);
-        String url = "/account-service/index";
+        String url = "/account-service/account/individual";
         if (!"individual".equals(realm)) {
             url = "/developer-" + realm + "/api/" + realm;
         }
 
         request.setPath(url);
-        
+
         /*
          * You can use the parameters in the configuration.
          */
