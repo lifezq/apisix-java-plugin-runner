@@ -11,13 +11,13 @@ import java.util.List;
 
 /**
  * @Package org.apache.apisix.plugin.runner.filter
- * @ClassName RewriteRequestRealmFilter
+ * @ClassName AppRewriteRequestRealmFilter
  * @Description TODO
  * @Author Ryan
- * @Date 2023/1/17
+ * @Date 2023/2/3
  */
 @Component
-public class RewriteRequestRealmFilter implements PluginFilter {
+public class AppRewriteRequestRealmFilter implements PluginFilter {
     @Autowired
     private UserServiceImpl userService;
 
@@ -47,7 +47,7 @@ public class RewriteRequestRealmFilter implements PluginFilter {
         The value of name in the configuration corresponds to the value of return here.
          */
 
-        return "RewriteRequestDemoFilter";
+        return "AppRewriteRequestRealmFilter";
     }
 
     @Override
@@ -60,24 +60,10 @@ public class RewriteRequestRealmFilter implements PluginFilter {
 //        Gson gson = new Gson();
 //        Map<String, String> user = new HashMap<>();
 //                user = gson.fromJson(request.getBody(), user.getClass());
-        String username = request.getArg("username");
-        if (username == null) {
-            if (request.getVars("username") != null) {
-                username = request.getVars("username");
-            } else if (request.getBody().startsWith("username")) {
-                username = request.getBody().substring(9);
-            } else {
-                username = "company-1";
-            }
-        }
+//        String jsessionid = request.getArg("JSESSIONID");
 
-        String realm = userService.getByUsername(username);
-        String url = "/account-service/account/individual";
-        if (!"individual".equals(realm)) {
-            url = "/developer-" + realm + "/api/" + realm;
-        }
-
-        request.setPath(url);
+        request.setPath("/account-service/index?jsessionid=" + request.getHeader("cookie") +
+                "&path=" + request.getPath());
 
         /*
          * You can use the parameters in the configuration.

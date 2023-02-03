@@ -55,5 +55,10 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.31</version>
         </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <version>20.0.2</version>
+        </dependency>
     </dependencies>
 </project>
