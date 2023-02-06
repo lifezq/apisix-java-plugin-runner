@@ -29,4 +29,19 @@ public class StringUtil {
                 })
                 .findFirst().orElse(null);
     }
+
+    public static String rewritePathWithRealm(String path, String realm) {
+        String[] ns = path.split("/");
+        Arrays.stream(ns).forEach(System.out::println);
+        if (ns.length >= 2) {
+            if (!"account-service".equals(ns[1])) {
+                path = path.replaceFirst("/" + ns[1], "/" + ns[1] + "-" + realm);
+            }
+        }
+        return path;
+    }
+
+    public static String getRealmFromIssuer(String issuer) {
+        return issuer.substring(issuer.lastIndexOf("/") + 1);
+    }
 }

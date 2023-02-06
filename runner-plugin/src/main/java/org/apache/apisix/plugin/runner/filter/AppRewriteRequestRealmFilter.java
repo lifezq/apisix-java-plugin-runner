@@ -3,6 +3,9 @@ package org.apache.apisix.plugin.runner.filter;
 import org.apache.apisix.plugin.runner.HttpRequest;
 import org.apache.apisix.plugin.runner.HttpResponse;
 import org.apache.apisix.plugin.runner.filter.service.impl.UserServiceImpl;
+import org.apache.apisix.plugin.runner.filter.utils.StringUtil;
+import org.apache.apisix.plugin.runner.filter.utils.TokenUtil;
+import org.keycloak.representations.AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,9 +65,13 @@ public class AppRewriteRequestRealmFilter implements PluginFilter {
 //                user = gson.fromJson(request.getBody(), user.getClass());
 //        String jsessionid = request.getArg("JSESSIONID");
 
-        request.setPath("/account-service/index?jsessionid=" + request.getHeader("cookie") +
-                "&path=" + request.getPath());
-
+        AccessToken accessToken = TokenUtil.parseAccessTokenFromTokenString(
+                StringUtil.parseTokenFromCookie(request.getHeader("cookie")));
+        if (accessToken != null) {
+            request.setPath(StringUtil.rewritePathWithRealm(request.getPath(),
+                    StringUtil.getRealmFromIssuer(accessToken.getIssuer())));
+        }
+        
         /*
          * You can use the parameters in the configuration.
          */
