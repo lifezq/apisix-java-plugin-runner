@@ -77,6 +77,7 @@ public class DoLonginRewriteRequestRealmFilter implements PluginFilter {
             url = "/developer-" + realm + "/api/" + realm;
         }
 
+        request.setArg("login_hint", username);
         request.setPath(url);
 
         /*
